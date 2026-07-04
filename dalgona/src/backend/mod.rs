@@ -8,26 +8,16 @@ use crate::{
     types::{TransactionHash, TransactionRef, Verification},
 };
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct SubmittedTransaction {
-    pub hash: TransactionHash,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct SequencedTransaction {
-    pub tx: TransactionRef,
-}
-
 #[async_trait]
 pub trait Backend: Clone + Send + Sync + 'static {
-    async fn submit(&self, namespace: NamespaceId, payload: Bytes) -> Result<SubmittedTransaction>;
+    async fn submit(&self, namespace: NamespaceId, payload: Bytes) -> Result<TransactionHash>;
 
     async fn confirm(
         &self,
         namespace: NamespaceId,
         payload: Bytes,
-        submission: &SubmittedTransaction,
-    ) -> Result<Option<SequencedTransaction>>;
+        hash: TransactionHash,
+    ) -> Result<Option<TransactionRef>>;
 
     async fn get(&self, tx: TransactionRef) -> Result<Bytes>;
 
