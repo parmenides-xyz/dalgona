@@ -108,11 +108,11 @@ impl From<TransactionKey> for TransactionRef {
     }
 }
 
-pub(crate) fn compute_commitment(namespace: NamespaceId, payload: &[u8]) -> TransactionHash {
+pub fn compute_commitment(namespace: NamespaceId, payload: &[u8]) -> TransactionHash {
     Transaction::new(namespace, payload.to_vec()).commit()
 }
 
-pub(crate) fn validate_commitment(tx: &TransactionRef, payload: &[u8]) -> Result<()> {
+pub fn validate_commitment(tx: &TransactionRef, payload: &[u8]) -> Result<()> {
     let commitment = compute_commitment(tx.namespace, payload);
     if commitment != tx.hash {
         return Err(Error::CommitmentMismatch);
